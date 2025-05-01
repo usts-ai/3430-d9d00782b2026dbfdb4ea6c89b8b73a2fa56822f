@@ -1,13 +1,26 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
-import { FaTree, FaUserTie, FaClipboardList, FaMobileAlt, FaChartLine } from 'react-icons/fa';
+import { FaTree, FaUserTie, FaClipboardList, FaMobileAlt, FaChartLine, FaLeaf, FaCalendarAlt, FaFileInvoiceDollar, FaUsers } from 'react-icons/fa';
+import FeatureCard from '../components/FeatureCard';
+import TestimonialCard from '../components/TestimonialCard';
+import StatCard from '../components/StatCard';
+import AppScreenshot from '../components/AppScreenshot';
+import CtaSection from '../components/CtaSection';
+
+// Importation des images
+import heroImage from '../assets/images/hero-landscape.jpg';
+import garden1 from '../assets/images/garden1.jpg';
+import garden2 from '../assets/images/garden2.jpg';
+import garden3 from '../assets/images/garden3.jpg';
 
 // Types pour les données mockées
 type Testimonial = {
   id: number;
   name: string;
+  role: string;
   company: string;
   text: string;
+  avatar: string;
 };
 
 type Feature = {
@@ -17,25 +30,38 @@ type Feature = {
   icon: React.ReactNode;
 };
 
+type Screenshot = {
+  id: number;
+  image: any;
+  title: string;
+  description: string;
+};
+
 // Données mockées
 const testimonials: Testimonial[] = [
   {
     id: 1,
     name: "Michel Dupont",
+    role: "Directeur",
     company: "Jardins Élégants",
-    text: "Cette application a révolutionné ma façon de gérer mes devis clients. Je gagne un temps précieux chaque jour !"
+    text: "Cette application a révolutionné ma façon de gérer mes devis clients. Je gagne un temps précieux chaque jour et mes clients apprécient le professionnalisme des documents générés.",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg"
   },
   {
     id: 2,
     name: "Sophie Martin",
+    role: "Paysagiste",
     company: "Paysages Créatifs",
-    text: "L'interface intuitive me permet de suivre facilement tous mes projets en cours et de gérer mes contrats efficacement."
+    text: "L'interface intuitive me permet de suivre facilement tous mes projets en cours et de gérer mes contrats efficacement. Un outil indispensable pour mon activité quotidienne.",
+    avatar: "https://randomuser.me/api/portraits/women/44.jpg"
   },
   {
     id: 3,
     name: "Jean Lefebvre",
+    role: "Gérant",
     company: "Nature & Design",
-    text: "Mes clients sont impressionnés par le professionnalisme des devis générés par l'application. Un outil indispensable !"
+    text: "Mes clients sont impressionnés par le professionnalisme des devis générés par l'application. Un outil indispensable qui m'a permis d'augmenter mon taux de conversion de 30% !",
+    avatar: "https://randomuser.me/api/portraits/men/67.jpg"
   }
 ];
 
@@ -43,26 +69,59 @@ const features: Feature[] = [
   {
     id: 1,
     title: "Prise de renseignements",
-    description: "Saisissez facilement tous les détails des projets paysagers de vos clients",
-    icon: <FaClipboardList size={36} className="text-teal-400 mb-4" />
+    description: "Saisissez facilement tous les détails des projets paysagers de vos clients avec des formulaires intuitifs et personnalisables.",
+    icon: <FaClipboardList />
   },
   {
     id: 2,
     title: "Gestion des devis",
-    description: "Créez et modifiez des devis professionnels en quelques clics",
-    icon: <FaUserTie size={36} className="text-teal-400 mb-4" />
+    description: "Créez et modifiez des devis professionnels en quelques clics, avec calcul automatique des coûts et marges.",
+    icon: <FaFileInvoiceDollar />
   },
   {
     id: 3,
     title: "Notation des contrats",
-    description: "Suivez et évaluez l'avancement de vos contrats existants",
-    icon: <FaTree size={36} className="text-teal-400 mb-4" />
+    description: "Suivez et évaluez l'avancement de vos contrats existants pour optimiser votre service client et votre rentabilité.",
+    icon: <FaTree />
   },
   {
     id: 4,
     title: "Multiplateforme",
-    description: "Disponible sur iOS, Android et en version web, pour travailler où que vous soyez",
-    icon: <FaMobileAlt size={36} className="text-teal-400 mb-4" />
+    description: "Disponible sur iOS, Android et en version web, pour travailler où que vous soyez, même sans connexion internet.",
+    icon: <FaMobileAlt />
+  },
+  {
+    id: 5,
+    title: "Gestion de planning",
+    description: "Organisez efficacement les interventions de vos équipes et optimisez les déplacements sur le terrain.",
+    icon: <FaCalendarAlt />
+  },
+  {
+    id: 6,
+    title: "Gestion d'équipe",
+    description: "Attribuez des tâches à vos collaborateurs et suivez leur avancement en temps réel pour une meilleure coordination.",
+    icon: <FaUsers />
+  }
+];
+
+const screenshots: Screenshot[] = [
+  {
+    id: 1,
+    image: garden1,
+    title: "Création de devis simplifiée",
+    description: "Générez des devis professionnels en quelques minutes grâce à notre interface intuitive. Personnalisez chaque aspect selon vos besoins et envoyez-les directement à vos clients."
+  },
+  {
+    id: 2,
+    image: garden2,
+    title: "Suivi de projets en temps réel",
+    description: "Visualisez l'avancement de tous vos projets paysagers sur un tableau de bord intuitif. Suivez les étapes, les coûts et les délais pour une gestion optimale."
+  },
+  {
+    id: 3,
+    image: garden3,
+    title: "Gestion des contrats et avenants",
+    description: "Créez, modifiez et suivez vos contrats et avenants en toute simplicité. Gardez une trace de toutes les modifications et validations pour une transparence totale."
   }
 ];
 
@@ -121,23 +180,39 @@ const Homepage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section avec effet parallax */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-r from-teal-500 to-blue-600">
-        <div 
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <motion.div 
           className="absolute inset-0 z-0" 
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
           style={{
-            backgroundImage: 'url("https://images.unsplash.com/photo-1558904541-efa843a96f01?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80")',
+            backgroundImage: `url(${heroImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            opacity: 0.3
+            filter: 'brightness(0.7)'
           }}
         />
 
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-900/70 to-blue-900/70 z-0" />
+
         <motion.div 
-          className="relative z-10 text-center px-4 sm:px-6 lg:px-8"
+          className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="flex justify-center mb-6"
+          >
+            <div className="bg-white/20 backdrop-blur-md p-3 rounded-full">
+              <FaLeaf className="text-4xl text-teal-400" />
+            </div>
+          </motion.div>
+
           <motion.h1 
             className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6"
             initial={{ opacity: 0 }}
@@ -145,37 +220,43 @@ const Homepage: React.FC = () => {
             transition={{ delay: 0.2, duration: 0.8 }}
           >
             <span className="block">PaysaApp</span>
-            <span className="block text-2xl sm:text-3xl md:text-4xl mt-3">
+            <motion.span 
+              className="block text-2xl sm:text-3xl md:text-4xl mt-3 text-teal-300"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+            >
               La solution digitale pour les professionnels du paysage
-            </span>
+            </motion.span>
           </motion.h1>
 
           <motion.p 
-            className="max-w-lg mx-auto text-xl text-white mb-10"
+            className="max-w-2xl mx-auto text-xl text-white/90 mb-10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
           >
-            Gérez efficacement vos devis, contrats et suivis de projets paysagers en quelques clics.
+            Gérez efficacement vos devis, contrats et suivis de projets paysagers en quelques clics. 
+            Disponible sur iOS, Android et en version web.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
             className="flex flex-col sm:flex-row justify-center gap-4"
           >
             <motion.button 
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
               whileTap={{ scale: 0.95 }}
-              className="bg-white text-teal-600 font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition duration-300"
+              className="bg-teal-500 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:bg-teal-600 transition duration-300"
             >
               Télécharger l'app
             </motion.button>
             <motion.button 
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
               whileTap={{ scale: 0.95 }}
-              className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition duration-300"
+              className="bg-transparent border-2 border-white text-white font-bold py-4 px-8 rounded-full shadow-lg hover:bg-white/10 transition duration-300"
             >
               Essai gratuit
             </motion.button>
@@ -193,303 +274,190 @@ const Homepage: React.FC = () => {
             duration: 1.5,
           }}
         >
-          <FaChartLine className="text-white text-2xl" />
+          <motion.div
+            whileHover={{ scale: 1.2, y: -5 }}
+            className="bg-white/20 backdrop-blur-md p-3 rounded-full cursor-pointer"
+          >
+            <FaChartLine className="text-white text-xl" />
+          </motion.div>
         </motion.div>
+      </section>
+
+      {/* Section Statistiques */}
+      <section className="py-20 bg-gradient-to-b from-teal-50 to-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4"
+            >
+              Pourquoi choisir PaysaApp ?
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="max-w-2xl mx-auto text-lg text-gray-600"
+            >
+              Rejoignez des milliers de professionnels du paysage qui ont déjà transformé leur activité grâce à notre solution.
+            </motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <StatCard 
+              icon={<FaUsers />} 
+              value={15000} 
+              label="Utilisateurs actifs" 
+              suffix="+" 
+              index={0} 
+            />
+            <StatCard 
+              icon={<FaFileInvoiceDollar />} 
+              value={250000} 
+              label="Devis générés" 
+              suffix="+" 
+              index={1} 
+            />
+            <StatCard 
+              icon={<FaTree />} 
+              value={98} 
+              label="Satisfaction client" 
+              suffix="%" 
+              index={2} 
+            />
+            <StatCard 
+              icon={<FaChartLine />} 
+              value={35} 
+              label="Gain de productivité" 
+              suffix="%" 
+              index={3} 
+            />
+          </div>
+        </div>
       </section>
 
       {/* Section Fonctionnalités */}
       <section className="py-20 bg-white" id="features">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="text-center mb-16">
+          <div className="text-center mb-16">
             <motion.h2 
-              variants={itemVariants} 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
               className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4"
             >
               Fonctionnalités principales
             </motion.h2>
-            <motion.p 
-              variants={itemVariants}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
               className="max-w-2xl mx-auto text-lg text-gray-600"
             >
-              Découvrez comment PaysaApp peut transformer votre quotidien professionnel
+              Découvrez comment PaysaApp peut simplifier votre quotidien et vous faire gagner du temps.
             </motion.p>
-          </AnimatedSection>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature) => (
-              <motion.div
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <FeatureCard
                 key={feature.id}
-                whileHover={{ y: -10 }}
-                className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center"
-              >
-                {feature.icon}
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </motion.div>
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+                index={index}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section App Preview avec animation */}
+      {/* Section Screenshots */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center">
-            <AnimatedSection className="lg:w-1/2 mb-10 lg:mb-0 text-center lg:text-left">
-              <motion.h2 
-                variants={itemVariants}
-                className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6"
-              >
-                Une interface intuitive pour plus d'efficacité
-              </motion.h2>
-              <motion.p 
-                variants={itemVariants}
-                className="text-lg text-gray-600 mb-8"
-              >
-                Notre application a été conçue pour simplifier votre quotidien. Avec son interface utilisateur intuitive, accédez rapidement à toutes les fonctionnalités essentielles à votre activité de paysagiste.
-              </motion.p>
-              <motion.ul variants={containerVariants} className="space-y-4 mb-8">
-                {[
-                  "Création de devis en moins de 5 minutes",
-                  "Suivi en temps réel de l'avancement des projets",
-                  "Synchronisation automatique sur tous vos appareils",
-                  "Notifications pour ne manquer aucune opportunité"
-                ].map((item, index) => (
-                  <motion.li 
-                    key={index}
-                    variants={itemVariants}
-                    className="flex items-center"
-                  >
-                    <span className="bg-teal-500 rounded-full p-1 mr-3">
-                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </span>
-                    {item}
-                  </motion.li>
-                ))}
-              </motion.ul>
-            </AnimatedSection>
+          <div className="text-center mb-16">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4"
+            >
+              Découvrez l'application
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="max-w-2xl mx-auto text-lg text-gray-600"
+            >
+              Une interface intuitive et moderne pour une expérience utilisateur optimale.
+            </motion.p>
+          </div>
 
-            <div className="lg:w-1/2 relative">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-                className="relative mx-auto"
-                style={{ maxWidth: "300px" }}
-              >
-                {/* Mockup de téléphone */}
-                <div className="relative z-10 border-8 border-gray-800 rounded-[40px] shadow-xl overflow-hidden">
-                  <img 
-                    src="https://images.unsplash.com/photo-1598901847919-b95dd0fabbb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                    alt="Interface de l'application" 
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Barre de statut */}
-                  <div className="absolute top-0 inset-x-0 h-6 bg-black bg-opacity-75 flex items-center justify-between px-4">
-                    <div className="w-16 h-1 bg-white rounded-full"></div>
-                  </div>
-                </div>
-                
-                {/* Éléments décoratifs */}
-                <div className="absolute -top-10 -left-10 w-40 h-40 bg-teal-500 bg-opacity-20 rounded-full blur-xl"></div>
-                <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-500 bg-opacity-20 rounded-full blur-xl"></div>
-              </motion.div>
-            </div>
+          <div className="space-y-20">
+            {screenshots.map((screenshot, index) => (
+              <AppScreenshot
+                key={screenshot.id}
+                image={screenshot.image}
+                title={screenshot.title}
+                description={screenshot.description}
+                index={index}
+              />
+            ))}
           </div>
         </div>
       </section>
 
       {/* Section Témoignages */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-teal-500 text-white">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="text-center mb-16">
+          <div className="text-center mb-16">
             <motion.h2 
-              variants={itemVariants}
-              className="text-3xl sm:text-4xl font-bold mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4"
             >
-              Témoignages clients
+              Ce que disent nos utilisateurs
             </motion.h2>
-            <motion.p 
-              variants={itemVariants}
-              className="max-w-2xl mx-auto text-lg opacity-90"
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="max-w-2xl mx-auto text-lg text-gray-600"
             >
-              Découvrez ce que nos utilisateurs disent de PaysaApp
+              Découvrez comment PaysaApp a transformé l'activité de nos clients.
             </motion.p>
-          </AnimatedSection>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <motion.div
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <TestimonialCard
                 key={testimonial.id}
-                whileHover={{ y: -5 }}
-                className="bg-white bg-opacity-10 backdrop-blur-lg p-6 rounded-lg shadow-lg"
-              >
-                <div className="mb-4">
-                  {Array(5).fill(0).map((_, i) => (
-                    <svg key={i} className="inline-block w-5 h-5 text-yellow-300 fill-current" viewBox="0 0 24 24">
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="italic mb-4">"{testimonial.text}"</p>
-                <div className="font-semibold">{testimonial.name}</div>
-                <div className="text-sm opacity-80">{testimonial.company}</div>
-              </motion.div>
+                name={testimonial.name}
+                role={testimonial.role}
+                company={testimonial.company}
+                testimonial={testimonial.text}
+                avatar={testimonial.avatar}
+                index={index}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section Call-to-Action */}
-      <section className="py-20 bg-white text-center">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection>
-            <motion.h2 
-              variants={itemVariants}
-              className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6"
-            >
-              Prêt à transformer votre activité de paysagisme ?
-            </motion.h2>
-            <motion.p 
-              variants={itemVariants}
-              className="max-w-2xl mx-auto text-lg text-gray-600 mb-10"
-            >
-              Essayez PaysaApp gratuitement pendant 14 jours et découvrez comment notre application peut simplifier votre quotidien professionnel.
-            </motion.p>
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row justify-center gap-4"
-            >
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-teal-500 to-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition duration-300"
-              >
-                Commencer l'essai gratuit
-              </motion.button>
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-white border-2 border-blue-600 text-blue-600 font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition duration-300"
-              >
-                Voir nos tarifs
-              </motion.button>
-            </motion.div>
-          </AnimatedSection>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white pt-16 pb-8">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-xl font-bold mb-4">PaysaApp</h3>
-              <p className="mb-4 text-gray-400">La solution complète pour les professionnels du paysage.</p>
-              <div className="flex space-x-4">
-                {/* Icônes réseaux sociaux */}
-                {["facebook", "twitter", "instagram", "linkedin"].map((social) => (
-                  <motion.a
-                    key={social}
-                    href="#"
-                    whileHover={{ y: -3 }}
-                    className="bg-gray-800 w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-teal-600"
-                  >
-                    <span className="sr-only">{social}</span>
-                    {/* Icône simplifiée */}
-                    <div className="w-5 h-5 bg-white mask-size-contain" />
-                  </motion.a>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-xl font-bold mb-4">Solutions</h3>
-              <ul className="space-y-2">
-                {["Pour paysagistes", "Pour architectes", "Pour pépiniéristes", "Pour jardineries"].map((item) => (
-                  <motion.li key={item} whileHover={{ x: 3 }}>
-                    <a href="#" className="text-gray-400 hover:text-teal-300 transition-colors">
-                      {item}
-                    </a>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-xl font-bold mb-4">Ressources</h3>
-              <ul className="space-y-2">
-                {["Centre d'aide", "Tutoriels vidéo", "Webinaires", "Blog"].map((item) => (
-                  <motion.li key={item} whileHover={{ x: 3 }}>
-                    <a href="#" className="text-gray-400 hover:text-teal-300 transition-colors">
-                      {item}
-                    </a>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-xl font-bold mb-4">Contact</h3>
-              <ul className="space-y-2">
-                <li className="flex items-start text-gray-400">
-                  <span className="mr-2">📍</span>
-                  123 Avenue des Paysagistes, 75000 Paris
-                </li>
-                <li className="flex items-start text-gray-400">
-                  <span className="mr-2">📞</span>
-                  01 23 45 67 89
-                </li>
-                <li className="flex items-start text-gray-400">
-                  <span className="mr-2">✉️</span>
-                  contact@paysaapp.fr
-                </li>
-              </ul>
-            </motion.div>
-          </div>
-
-          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-500 text-sm mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} PaysaApp. Tous droits réservés.
-            </p>
-            <div className="flex space-x-4">
-              {["Confidentialité", "Conditions", "Mentions légales"].map((item) => (
-                <motion.a
-                  key={item}
-                  href="#"
-                  whileHover={{ y: -2 }}
-                  className="text-sm text-gray-500 hover:text-white transition-colors"
-                >
-                  {item}
-                </motion.a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* Section CTA */}
+      <CtaSection />
     </div>
   );
 };
